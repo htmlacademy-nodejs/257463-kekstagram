@@ -1,0 +1,19 @@
+{
+  "name": "task1",
+  "version": "1.0.0",
+  "description": "It is the training project",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndrewBalak/257463-kekstagram.git"
+  },
+  "author": "AndreyBalak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndrewBalak/257463-kekstagram/issues"
+  },
+  "homepage": "https://github.com/AndrewBalak/257463-kekstagram#readme"
+}
