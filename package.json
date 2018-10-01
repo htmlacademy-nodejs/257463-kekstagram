@@ -1,10 +1,12 @@
 {
-  "name": "task1",
+  "name": "task2",
   "version": "1.0.0",
   "description": "It is the training project",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js"
+    "start": "node index.js",
+    "test:lint": "eslint .",
+    "test": "npm run test:lint"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/AndrewBalak/257463-kekstagram/issues"
   },
-  "homepage": "https://github.com/AndrewBalak/257463-kekstagram#readme"
+  "homepage": "https://github.com/AndrewBalak/257463-kekstagram#readme",
+  "devDependencies": {
+    "eslint": "5.6.1",
+    "eslint-config-htmlacademy": "0.5.2"
+  }
 }
