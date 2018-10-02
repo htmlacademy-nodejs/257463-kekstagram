@@ -1,9 +1,9 @@
 'use strict';
 const packageInfo = require(`../package.json`);
 module.exports.Command = {
-  name: `version`,
-  description: `Shows program version`,
+  name: `author`,
+  description: `Shows program author`,
   execute() {
-    console.log(`v${packageInfo.version}`);
+    console.log(`${packageInfo.author}`);
   }
 };
