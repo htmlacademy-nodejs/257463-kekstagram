@@ -6,19 +6,21 @@ module.exports.Command = {
   description: `Shows program version`,
   execute() {
     let buffer = ``;
-    for (let i = 0; i < packageInfo.version.length; i++) {
+    let string = packageInfo.version.split(`.`);
+    for (let i = 0; i < string.length; i++) {
       switch (i) {
-        case 0:
-          buffer += colors.red(packageInfo.version[i]);
+        case 0: // major
+          string[i] = colors.red(string[i]);
+          buffer = string[i];
           break;
-        case 2:
-          buffer += colors.green(packageInfo.version[i]);
+        case 1: // minor
+          string[i] = colors.green(string[i]);
+          buffer = buffer.concat(`.`, string[i]);
           break;
-        case 4:
-          buffer += colors.blue(packageInfo.version[i]);
+        case 2: // patch
+          string[i] = colors.blue(string[i]);
+          buffer = buffer.concat(`.`, string[i]);
           break;
-        default:
-          buffer += packageInfo.version[i];
       }
     }
     console.log(`v${buffer}`);
