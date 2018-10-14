@@ -77,7 +77,7 @@ function checkDate(date) {
     messages.push(`Это не число`);
     sendAssert(correct, messages);
   }
-  if (date > new Date().getTime() || date < new Date().getTime() - new Date().getDay() * 7) {
+  if (date > Date.now() || date > Date.now() - 7 * 24 * 3600 * 1000) {
     correct = false;
     messages.push(`число не в допустимом интервале`);
   }
@@ -228,10 +228,5 @@ function isArrayOfStrings(array) {
 }
 
 function isValidURL(string) {
-  const res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
-  if (res === null) {
-    return false;
-  } else {
-    return true;
-  }
+  return /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(string);
 }
