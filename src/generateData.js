@@ -1,5 +1,13 @@
 'use strict';
 
+const data = {
+  scaleMax: 100,
+  likesMax: 1000,
+  imageSize: 600,
+  correctEffects: [`none`, `chrome`, `sepia`, `marvin`, `phobos`, `heat`],
+  StringLength: 140
+};
+
 function Entity(url, scale, effect, hashtags, description, likes, comments, date) {
   this.url = url;
   this.scale = scale;
@@ -12,29 +20,21 @@ function Entity(url, scale, effect, hashtags, description, likes, comments, date
 }
 
 function generateEntity() {
-  let data = new Entity();
-  data.url = generateUrl(600);
-  data.scale = generateNumber(100);
-  data.likes = generateNumber(1000);
-  data.description = generateText(140);
-  data.date = Math.floor(Math.random() * (Date.now() - 7 * 24 * 3600 * 1000) + 7 * 24 * 3600 * 1000);
-  const correctEffects = [`none`, `chrome`, `sepia`, `marvin`, `phobos`, `heat`];
-  data.effect = correctEffects[generateNumber(correctEffects.length - 1)];
-  data.comments = generateArrayOfStrings(generateNumber(10), 140); // В задании не сказано об ограничении количества комментов, поэтому пускай будет 10 для скорости и наглядности
-  data.hashtags = generateHashtags();
-  return data;
+  let entity = new Entity();
+  entity.url = generateUrl(data.imageSize);
+  entity.scale = generateNumber(data.scaleMax);
+  entity.likes = generateNumber(data.likesMax);
+  entity.description = generateText(data.StringLength);
+  entity.date = Math.floor(Math.random() * (Date.now() - 7 * 24 * 3600 * 1000) + 7 * 24 * 3600 * 1000);
+  entity.effect = data.correctEffects[generateNumber(data.correctEffects.length - 1)];
+  entity.comments = generateArrayOfStrings(generateNumber(10), data.StringLength); // В задании не сказано об ограничении количества комментов, поэтому пускай будет 10 для скорости и наглядности
+  entity.hashtags = generateHashtags();
+  return entity;
 }
 
 // генерация адресной строки
 function generateUrl(size) {
-  let url = ``;
-  url += Math.round(Math.random()) === 1 ? `https` : `http`;
-  url += `://`;
-  url += Math.round(Math.random()) === 1 ? `www.` : ``;
-  url += generateText(generateNumber(63, 2)).toLowerCase().replace(/[0-9]/g, ``).replace(/\s/g, ``);
-  url += `.`;
-  url += generateText(generateNumber(5, 2)).toLowerCase().replace(/[0-9]/g, ``).replace(/\s/g, ``);
-  url += `/${size}/${size}`;
+  let url = `${Math.round(Math.random()) === 1 ? `https` : `http`}://${Math.round(Math.random()) === 1 ? `www.` : ``}${generateText(generateNumber(63, 2)).toLowerCase().replace(/[0-9]/g, ``).replace(/\s/g, ``)}` + `.` + `${generateText(generateNumber(5, 2)).toLowerCase().replace(/[0-9]/g, ``).replace(/\s/g, ``)}/${size}/${size}`;
   console.log(url);
   return url;
 }
