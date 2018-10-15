@@ -35,7 +35,6 @@ function generateEntity() {
 // генерация адресной строки
 function generateUrl(size) {
   let url = `${Math.round(Math.random()) === 1 ? `https` : `http`}://${Math.round(Math.random()) === 1 ? `www.` : ``}${generateText(generateNumber(63, 2)).toLowerCase().replace(/[0-9]/g, ``).replace(/\s/g, ``)}` + `.` + `${generateText(generateNumber(5, 2)).toLowerCase().replace(/[0-9]/g, ``).replace(/\s/g, ``)}/${size}/${size}`;
-  console.log(url);
   return url;
 }
 
