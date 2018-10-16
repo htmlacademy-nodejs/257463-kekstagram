@@ -1,11 +1,11 @@
 'use strict';
 
 const data = {
-  scaleMax: 100,
-  likesMax: 1000,
-  imageSize: 600,
-  correctEffects: [`none`, `chrome`, `sepia`, `marvin`, `phobos`, `heat`],
-  StringLength: 140
+  SCALE_MAX: 100,
+  LIKES_MAX: 1000,
+  IMAGE_SIZE: 600,
+  CORRECT_EFFECTS: [`none`, `chrome`, `sepia`, `marvin`, `phobos`, `heat`],
+  STRING_LENGTH: 140
 };
 
 function Entity(url, scale, effect, hashtags, description, likes, comments, date) {
