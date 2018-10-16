@@ -21,12 +21,12 @@ function Entity(url, scale, effect, hashtags, description, likes, comments, date
 
 function generateEntity() {
   let entity = new Entity();
-  entity.url = generateUrl(data.imageSize);
-  entity.scale = generateNumber(data.scaleMax);
-  entity.likes = generateNumber(data.likesMax);
-  entity.description = generateText(data.StringLength);
+  entity.url = generateUrl(data.IMAGE_SIZE);
+  entity.scale = generateNumber(data.SCALE_MAX);
+  entity.likes = generateNumber(data.LIKES_MAX);
+  entity.description = generateText(data.STRING_LENGTH);
   entity.date = Math.floor(Math.random() * (Date.now() - 7 * 24 * 3600 * 1000) + 7 * 24 * 3600 * 1000);
-  entity.effect = data.correctEffects[generateNumber(data.correctEffects.length - 1)];
+  entity.effect = data.CORRECT_EFFECTS[generateNumber(data.CORRECT_EFFECTS.length - 1)];
   entity.comments = generateArrayOfStrings(generateNumber(10), data.StringLength); // В задании не сказано об ограничении количества комментов, поэтому пускай будет 10 для скорости и наглядности
   entity.hashtags = generateHashtags();
   return entity;
