@@ -2,7 +2,7 @@
 const packageInfo = require(`../package.json`);
 const colors = require(`colors/safe`);
 module.exports.Command = {
-  name: `version`,
+  name: `--version`,
   description: `Shows program version`,
   execute() {
     let buffer = ``;

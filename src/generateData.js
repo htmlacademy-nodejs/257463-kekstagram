@@ -27,7 +27,7 @@ function generateEntity() {
   entity.description = generateText(data.STRING_LENGTH);
   entity.date = Math.floor(Math.random() * (Date.now() - 7 * 24 * 3600 * 1000) + 7 * 24 * 3600 * 1000);
   entity.effect = data.CORRECT_EFFECTS[generateNumber(data.CORRECT_EFFECTS.length - 1)];
-  entity.comments = generateArrayOfStrings(generateNumber(10), data.StringLength); // В задании не сказано об ограничении количества комментов, поэтому пускай будет 10 для скорости и наглядности
+  entity.comments = generateArrayOfStrings(generateNumber(10), data.STRING_LENGTH); // В задании не сказано об ограничении количества комментов, поэтому пускай будет 10 для скорости и наглядности
   entity.hashtags = generateHashtags();
   return entity;
 }
