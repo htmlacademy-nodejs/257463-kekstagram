@@ -6,5 +6,6 @@ module.exports.Command = {
   description: `Shows program license`,
   execute() {
     console.log(`${colors.blue(packageInfo.license)}`);
+    process.exit(0);
   }
 };

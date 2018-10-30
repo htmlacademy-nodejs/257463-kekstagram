@@ -6,5 +6,6 @@ module.exports.Command = {
   description: `Shows program author`,
   execute() {
     console.log(colors.grey(`${packageInfo.author}`));
+    process.exit(0);
   }
 };

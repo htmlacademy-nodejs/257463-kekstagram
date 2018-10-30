@@ -6,5 +6,6 @@ module.exports.Command = {
   description: `Shows program description`,
   execute() {
     console.log(`${colors.green(packageInfo.description)}`);
+    process.exit(0);
   }
 };
