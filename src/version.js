@@ -24,5 +24,6 @@ module.exports.Command = {
       }
     }
     console.log(`v${buffer}`);
+    process.exit(0);
   }
 };

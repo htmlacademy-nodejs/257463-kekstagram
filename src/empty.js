@@ -176,11 +176,11 @@ const finalStateMachine = {
 //  }, initDir);
 //  }
 
-function readData() {
-  process.stdin.on(`data`, function (chunk) {
+const readData = () => {
+  process.stdin.on(`data`, (chunk) => {
     const answer = chunk.trim();
     finalStateMachine.action(answer);
   });
-}
+};
 
 module.exports.finalStateMachine = finalStateMachine;
