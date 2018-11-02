@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require(`assert`);
-const data = require(`../src/generateData.js`).generateEntity();
+const data = require(`../src/generate-data/generate-data`).generateEntity();
 
 describe(`GenerateData`, () => {
   describe(`#url`, () => {
@@ -228,6 +228,6 @@ function isArrayOfStrings(array) {
 }
 
 function isValidURL(string) {
-  const regex = new RegExp(`^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?`);
+  const regex = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
   return regex.test(string);
 }

@@ -3,7 +3,7 @@ const packageInfo = require(`../package.json`);
 const colors = require(`colors/safe`);
 const fs = require(`fs`);
 const path = require(`path`);
-const generateData = require(`../src/generateData.js`).generateEntity;
+const generateData = require(`../src/generate-data/generate-data`).generateEntity;
 
 module.exports.Command = {
   name: ``,
