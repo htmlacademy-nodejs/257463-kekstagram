@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require(`assert`);
-const data = require(`../src/generateData.js`).generateEntity();
+const data = require(`../src/generate-data/generate-data`).generateEntity();
 
 describe(`GenerateData`, () => {
   describe(`#url`, () => {

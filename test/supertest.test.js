@@ -27,7 +27,23 @@ describe(`GET api/posts`, () => {
     assert(posts[0].date, data.data.slice(0, 2));
     assert(posts.length, 20);
   });
-
+  it(`get bad request ?ski=2&lim=20`, async () => {
+    const response = await request(app).
+      get(`/api/posts?ski=2&lim=20`).
+      set(`Accept`, `application/json`).
+      expect(400).
+      expect(`Content-Type`, `text/html; charset=utf-8`);
+    const posts = response.body;
+    assert(Object.keys(posts).length === 0);
+  });
+  it(`get page not found`, async () => {
+    const response = await request(app).
+      get(`/api/postsblablabla`).
+      expect(404).
+      expect(`Content-Type`, `text/html; charset=utf-8`);
+    const posts = response.body;
+    assert(Object.keys(posts).length === 0);
+  });
   it(`get all posts with / at the end`, async () => {
     const response = await request(app).
       get(`/api/posts/`).
