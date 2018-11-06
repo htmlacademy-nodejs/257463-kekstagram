@@ -18,6 +18,18 @@ app.use(`/api/posts`, postsRouter);
 
 app.use(express.static(`static`));
 
+app.use((err, req, res, next) => {
+  if (err) {
+    console.error(err);
+    res.status(500).send(`Something broke!`);
+  }
+  next();
+});
+
+app.use((req, res) => {
+  res.status(404).send(`Page not Found`);
+});
+
 module.exports.app = app; // для теста
 
 module.exports.Command = {
