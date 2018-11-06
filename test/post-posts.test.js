@@ -7,7 +7,7 @@ const data = require(`../data/test.json`);
 
 describe(`POST api/posts`, () => {
   it(`it send post as json`, async () => {
-    const sent = data[0].date;
+    const sent = data.data[0];
     const response = await request(app).
       post(`/api/posts`).
       send(sent).
@@ -21,15 +21,15 @@ describe(`POST api/posts`, () => {
 
   it(`send post as multipart/form-data`, async () => {
 
-    const sent = data[0].date;
+    const sent = data.data[0].date;
     const response = await request(app).
       post(`/api/posts`).
-      field(`date`, sent.date).
+      field(`date`, sent).
       set(`Accept`, `application/json`).
       set(`Content-Type`, `multipart/form-data`).
       expect(200).
       expect(`Content-Type`, /json/);
     const post = response.body;
-    assert(post.date, sent.date);
+    assert(post.date, sent);
   });
 });
