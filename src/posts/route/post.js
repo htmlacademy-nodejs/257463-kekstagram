@@ -4,11 +4,13 @@ const asyncUtil = require(`./async-middleware`);
 const parametres = require(`./parametres-config/parametres-config`);
 const paramsValidation = require(`./parametres-validation`);
 const NotFoundError = require(`../../error/not-found-error`);
+const BadRequestError = require(`../../error/bad-request-error`);
 const data = require(`../../../data/test.json`).data;
 const express = require(`express`);
 const jsonParser = express.json();
 const multer = require(`multer`);
-const upload = multer({storage: multer.memoryStorage()});
+const upload = multer({ storage: multer.memoryStorage() });
+const validate = require(`./post-validation`);
 
 module.exports = (postsRouter) => {
 
@@ -34,7 +36,16 @@ module.exports = (postsRouter) => {
 
   postsRouter.post(``, jsonParser, upload.none(), (req, res) => {
     const body = req.body;
+    validate(body);
     res.send(body);
   });
 
+  postsRouter.use((err, req, res, next) => {
+    if (err instanceof BadRequestError) {
+      res.status(err.code).json(err);
+    }
+    next();
+  });
 };
+
+
