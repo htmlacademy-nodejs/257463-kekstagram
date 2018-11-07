@@ -9,7 +9,7 @@ const data = require(`../../../data/test.json`).data;
 const express = require(`express`);
 const jsonParser = express.json();
 const multer = require(`multer`);
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({storage: multer.memoryStorage()});
 const validate = require(`./post-validation`);
 
 module.exports = (postsRouter) => {
@@ -17,9 +17,13 @@ module.exports = (postsRouter) => {
   postsRouter.get(``, asyncUtil(async (req, res) => {
     let limit = parseInt(req.query.limit || parametres.LIMIT.DEFAULT_VALUE, 10);
     let skip = parseInt(req.query.skip || parametres.SKIP.DEFAULT_VALUE, 10);
-    paramsValidation(req.query);
-    const result = data.slice(skip, limit + skip);
-    res.status(200).send(result);
+    const validResult = paramsValidation(req.query);
+    if (validResult.length === 0) {
+      const result = data.slice(skip, limit + skip);
+      res.status(200).send(result);
+    } else {
+      res.status(400).send(validResult);
+    }
   }));
 
   postsRouter.get(`/:date`, asyncUtil(async (req, res) => {
@@ -34,18 +38,22 @@ module.exports = (postsRouter) => {
     res.status(200).send(found);
   }));
 
-  postsRouter.post(``, jsonParser, upload.none(), (req, res) => {
+  postsRouter.post(``, jsonParser, upload.none(), asyncUtil(async (req, res) => {
     const body = req.body;
-    validate(body);
-    res.send(body);
-  });
+    let result = validate(body);
+    if (result.length === 0) {
+      res.status(200).send(body);
+    } else {
+      res.status(400).send(result);
+    }
+  }));
 
-  postsRouter.use((err, req, res, next) => {
+  postsRouter.use(asyncUtil(async (err, req, res, next) => {
     if (err instanceof BadRequestError) {
       res.status(err.code).json(err);
     }
     next();
-  });
+  }));
 };
 
 

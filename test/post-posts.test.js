@@ -5,8 +5,8 @@ const request = require(`supertest`);
 const app = require(`../src/server`).app;
 const data = require(`../data/test.json`);
 
-describe(`POST api/posts`, () => {
-  it(`it send post as json`, async () => {
+describe(`POST api/posts`, async () => {
+  await it(`it send post as json`, async () => {
     const sent = data.data[0];
     const response = await request(app).
       post(`/api/posts`).
@@ -19,7 +19,7 @@ describe(`POST api/posts`, () => {
     assert(post, sent);
   });
 
-  it(`send post as multipart/form-data`, async () => {
+  await it(`send post as multipart/form-data`, async () => {
 
     const sent = data.data[0];
     const response = await request(app).
@@ -40,7 +40,7 @@ describe(`POST api/posts`, () => {
     assert(post, sent);
   });
 
-  it(`send wrong post as application/json`, async () => {
+  await it(`send wrong post as application/json`, async () => {
 
     let wrongSent = {
       url: -999,
@@ -63,7 +63,7 @@ describe(`POST api/posts`, () => {
     assert(post);
   });
 
-  it(`send wrong post as multipart/form-data`, async () => {
+  await it(`send wrong post as multipart/form-data`, async () => {
 
     const wrongSent = {
       url: -999,

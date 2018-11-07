@@ -1,47 +1,35 @@
 'use strict';
 
-const BadRequestError = require(`../../error/bad-request-error`);
+// const BadRequestError = require(`../../error/bad-request-error`);
 
 const postValidation = (query) => {
-  let correct = true;
   let messages = [];
 
   if (!checkUrl(query.url).correct) {
-    messages.push({ url: checkUrl(query.url).messages });
-    correct = false;
+    messages.push({url: checkUrl(query.url).messages});
   }
   if (!checkNumberInInterval(query.scale, 0, 100).correct) {
-    messages.push({ scale: checkNumberInInterval(query.scale, 0, 100).messages });
-    correct = false;
+    messages.push({scale: checkNumberInInterval(query.scale, 0, 100).messages});
   }
   if (!checkEffect(query.effect).correct) {
-    messages.push({ effect: checkEffect(query.effect).messages });
-    correct = false;
+    messages.push({effect: checkEffect(query.effect).messages});
   }
   if (!checkHashtags(query.hashtags).correct) {
-    messages.push({ hashtags: checkHashtags(query.hashtags).messages });
-    correct = false;
+    messages.push({hashtags: checkHashtags(query.hashtags).messages});
   }
   if (!checkString(query.description).correct) {
-    messages.push({ description: checkString(query.description).messages });
-    correct = false;
+    messages.push({description: checkString(query.description).messages});
   }
   if (!checkNumberInInterval(query.likes, 0, 1000).correct) {
-    messages.push({ likes: checkNumberInInterval(query.likes, 0, 1000).messages });
-    correct = false;
+    messages.push({likes: checkNumberInInterval(query.likes, 0, 1000).messages});
   }
   if (!checkComments(query.comments).correct) {
     messages.push({comments: checkComments(query.comments).messages});
-    correct = false;
   }
   if (!checkDate(query.date).correct) {
     messages.push({date: checkDate(query.date).messages});
-    correct = false;
   }
-  if (!correct) {
-    throw new BadRequestError(messages);
-  }
-  return correct;
+  return messages;
 };
 
 module.exports = postValidation;
@@ -91,7 +79,7 @@ function checkComments(array) {
   if (!isArrayOfStrings(array)) {
     correct = false;
     messages.push(`Это не массив строк`);
-    return { correct, messages };
+    return {correct, messages};
   }
   if (array.some((e) => e.length > 140)) {
     correct = false;
