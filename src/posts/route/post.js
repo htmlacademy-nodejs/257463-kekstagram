@@ -42,6 +42,9 @@ module.exports = (postsRouter) => {
     const body = req.body;
     let result = validate(body);
     if (result.length === 0) {
+      body.hashtags = body.hashtags.split(` `);
+      body.date = Date.now();
+      console.log(body);
       res.status(200).send(body);
     } else {
       res.status(400).send(result);

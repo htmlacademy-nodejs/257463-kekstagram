@@ -5,8 +5,8 @@
 const postValidation = (query) => {
   let messages = [];
 
-  if (!checkUrl(query.url).correct) {
-    messages.push({url: checkUrl(query.url).messages});
+  if (!checkFilename(query.filename).correct) {
+    messages.push({url: checkFilename(query.filename).messages});
   }
   if (!checkNumberInInterval(query.scale, 0, 100).correct) {
     messages.push({scale: checkNumberInInterval(query.scale, 0, 100).messages});
@@ -20,70 +20,24 @@ const postValidation = (query) => {
   if (!checkString(query.description).correct) {
     messages.push({description: checkString(query.description).messages});
   }
-  if (!checkNumberInInterval(query.likes, 0, 1000).correct) {
-    messages.push({likes: checkNumberInInterval(query.likes, 0, 1000).messages});
-  }
-  if (!checkComments(query.comments).correct) {
-    messages.push({comments: checkComments(query.comments).messages});
-  }
-  if (!checkDate(query.date).correct) {
-    messages.push({date: checkDate(query.date).messages});
-  }
   return messages;
 };
 
 module.exports = postValidation;
 
-// адрес(строка) изображения 600x600, например https://picsum.photos/600/?random
-// P.S.: Не уверен что написал правильно эту функцию...
-function checkUrl(string) {
+// имя файла
+function checkFilename(string) {
   let correct = true;
-  let messages = [``];
+  let messages = [];
 
   if (typeof string !== `string`) {
     correct = false;
-    messages.push(`Это не строка`);
+    messages.push(`Value must be a string`);
     return {correct, messages};
   }
-  if (!isValidURL(string)) {
+  if (!isValidFilename(string)) {
     correct = false;
-    messages.push(`Некорректный адрес`);
-  }
-  if (string.indexOf(`600/600`) === -1 && string.indexOf(`600/?random`) === -1) {
-    correct = false;
-    messages.push(`Некорректный размер изображения`);
-  }
-  return {correct, messages};
-}
-
-// число, дата размещения, представляет собой timestamp в формате UNIX. Представляет собой случайное число в интервале от сейчас минус 7 дней
-function checkDate(date) {
-  let correct = true;
-  let messages = [``];
-  if (!/^-?[0-9]+$/.test(date)) {
-    correct = false;
-    messages.push(`Это не число`);
-    return {correct, messages};
-  }
-  if (date > Date.now() || date > Date.now() - 7 * 24 * 3600 * 1000) {
-    correct = false;
-    messages.push(`число не в допустимом интервале`);
-  }
-  return {correct, messages};
-}
-
-// массив произвольных строк, каждая строка не должна превышать 140 символов
-function checkComments(array) {
-  let correct = true;
-  let messages = [``];
-  if (!isArrayOfStrings(array)) {
-    correct = false;
-    messages.push(`Это не массив строк`);
-    return {correct, messages};
-  }
-  if (array.some((e) => e.length > 140)) {
-    correct = false;
-    messages.push(`Длина строк превышает допустимую норму`);
+    messages.push(`invalid name of file`);
   }
   return {correct, messages};
 }
@@ -91,15 +45,15 @@ function checkComments(array) {
 // строка, не более length символов
 function checkString(string, length) {
   let correct = true;
-  let messages = [``];
+  let messages = [];
   if (typeof string !== `string`) {
     correct = false;
-    messages.push(`Это не строка`);
+    messages.push(`Value must be a string`);
     return {correct, messages};
   }
   if (string.length > length) {
     correct = false;
-    messages.push(`Строка имеет более${length}символов`);
+    messages.push(`string has too many characters. max length is: ${length}`);
   }
   return {correct, messages};
 }
@@ -107,16 +61,16 @@ function checkString(string, length) {
 // число, в пределах от begin до end
 function checkNumberInInterval(number, begin, end) {
   let correct = true;
-  let messages = [``];
+  let messages = [];
   if (!/^-?[0-9]+$/.test(number)) {
     correct = false;
-    messages.push(`Это не число`);
+    messages.push(`this is not a number`);
     return {correct, messages};
   }
   number = parseInt(number, 10);
   if (number < begin || number > end) {
     correct = false;
-    messages.push(`Число не соответствует промежуточным значениям[${begin},${end}]`);
+    messages.push(`number does not match the intermediate value[${begin},${end}]`);
   }
   return {correct, messages};
 }
@@ -124,46 +78,44 @@ function checkNumberInInterval(number, begin, end) {
 // строка, одно из предустановленных значений: 'none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'
 function checkEffect(string) {
   let correct = true;
-  let messages = [``];
+  let messages = [];
   if (typeof string !== `string`) {
     correct = false;
-    messages.push(`Это не строка`);
+    messages.push(`Value must be a string`);
     return {correct, messages};
   }
   const checkArray = [`none`, `chrome`, `sepia`, `marvin`, `phobos`, `heat`];
   if (!checkArray.some((e) => e === string)) {
     correct = false;
-    messages.push(`Строка не соответствует предусмотренным значениям`);
+    messages.push(`The string does not match the specified values.`);
   }
   return {correct, messages};
 }
 
-//  массив строк — не более 5 элементов, каждая строка начинается с символа '#',
-//  должно содержать одно слово без пробелов, слова не должны повторяться(регистр не учитывается),
-//  длина одного слова не превышает 20 символов
-function checkHashtags(array) {
+function checkHashtags(string) {
   let correct = true;
-  let messages = [``];
-  if (!isArrayOfStrings(array)) {
+  let messages = [];
+  if (typeof string !== `string`) {
     correct = false;
-    messages.push(`Это не массив строк`);
+    messages.push(`Value must be a string`);
     return {correct, messages};
   }
+  const array = string.split(` `);
   if (array.length > 5) {
     correct = false;
-    messages.push(`Кол-во элементов больше 5`);
+    messages.push(`number of elements more than 5`);
   }
   if (array.some((e) => e[0] !== `#`)) {
     correct = false;
-    messages.push(`Не все строки начинаются с #`);
+    messages.push(`Not all lines begin with #`);
   }
   if (array.some((e) => e.indexOf(` `) !== -1)) {
     correct = false;
-    messages.push(`Строки содержат пробелы:`);
+    messages.push(`Lines must not contain spaces`);
   }
   if (array.some((e) => e.length > 20)) {
     correct = false;
-    messages.push(`Длина слова превышает 20 символов`);
+    messages.push(`Word length is over 20 characters`);
   }
 
   // P.S.: Долго мучался как это написать в одну строчку, в итоге сдался..
@@ -172,7 +124,7 @@ function checkHashtags(array) {
     for (let j = i + 1; j < array.length; j++) {
       if (array[i] === array[j]) {
         correct = false;
-        messages.push(`Строки повторяются:${array[i]}[${i}] и ${array[j]}[${j}]`);
+        messages.push(`strings are repeating:${array[i]}[${i}] и ${array[j]}[${j}]`);
         break;
       }
     }
@@ -182,25 +134,7 @@ function checkHashtags(array) {
 
 // ------------------- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
 
-// проверка массива строк, является ли этот массив массивом, и состоит ли он из строк :D
-function isArrayOfStrings(array) {
-  if (!Array.isArray(array)) {
-    return false;
-  }
-  let correct = true;
-  array.forEach((val) => {
-    if (typeof val !== `string`) {
-      correct = false;
-    }
-  });
-  if (correct) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function isValidURL(string) {
-  const regex = new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm);
+function isValidFilename(string) {
+  const regex = new RegExp(/^[\w,\s-]+\.[A-Za-z]{3}$/gm);
   return regex.test(string);
 }
