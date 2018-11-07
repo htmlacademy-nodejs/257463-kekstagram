@@ -3,11 +3,16 @@
 const assert = require(`assert`);
 const request = require(`supertest`);
 const app = require(`../src/server`).app;
-const data = require(`../data/test.json`);
 
 describe(`POST api/posts`, () => {
   it(`it send post as json`, async () => {
-    const sent = data.data[0];
+    const sent = {
+      filename: `keks.jpg`,
+      scale: 50,
+      effect: `chrome`,
+      hashtags: `#goodnews #relax`,
+      description: `it is a test object`
+    };
     const response = await request(app).
       post(`/api/posts`).
       send(sent).
@@ -20,16 +25,67 @@ describe(`POST api/posts`, () => {
   });
 
   it(`send post as multipart/form-data`, async () => {
-
-    const sent = data.data[0].date;
+    const sent = {
+      filename: `keks.jpg`,
+      scale: 50,
+      effect: `chrome`,
+      hashtags: `#goodnews #relax`,
+      description: `it is a test object`
+    };
     const response = await request(app).
       post(`/api/posts`).
-      field(`date`, sent).
+      field(`filename`, sent.filename).
+      field(`scale`, sent.scale).
+      field(`effect`, sent.effect).
+      field(`hashtags`, sent.hashtags).
+      field(`description`, sent.description).
       set(`Accept`, `application/json`).
       set(`Content-Type`, `multipart/form-data`).
       expect(200).
       expect(`Content-Type`, /json/);
     const post = response.body;
-    assert(post.date, sent);
+    assert(post, sent);
+  });
+
+  it(`send wrong post as application/json`, async () => {
+    const wrongSent = {
+      filename: -999,
+      scale: -999,
+      effect: -999,
+      hashtags: -999,
+      description: -999
+    };
+    const response = await request(app).
+      post(`/api/posts`).
+      send(wrongSent).
+      set(`Accept`, `application/json`).
+      set(`Content-Type`, `application/json`).
+      expect(400).
+      expect(`Content-Type`, /json/);
+    const post = response.body;
+    assert(post);
+  });
+
+  it(`send wrong post as multipart/form-data`, async () => {
+    const wrongSent = {
+      filename: -999,
+      scale: -999,
+      effect: -999,
+      hashtags: -999,
+      description: -999
+    };
+    const response = await request(app).
+      post(`/api/posts`).
+      field(`filename`, wrongSent.filename).
+      field(`scale`, wrongSent.scale).
+      field(`effect`, wrongSent.effect).
+      field(`hashtags`, wrongSent.hashtags).
+      field(`description`, wrongSent.description).
+      set(`Accept`, `application/json`).
+      set(`Content-Type`, `multipart/form-data`).
+      expect(400).
+      expect(`Content-Type`, /json/);
+    const post = response.body;
+    assert(post);
   });
 });
