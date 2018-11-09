@@ -8,28 +8,17 @@ const data = {
   STRING_LENGTH: 140
 };
 
-function Entity(url, scale, effect, hashtags, description, likes, comments, date) {
-  this.url = url;
-  this.scale = scale;
-  this.effect = effect;
-  this.hashtags = hashtags;
-  this.description = description;
-  this.likes = likes;
-  this.comments = comments;
-  this.date = date;
-}
-
 function generateEntity() {
-  let entity = new Entity();
-  entity.url = generateUrl(data.IMAGE_SIZE);
-  entity.scale = generateNumber(data.SCALE_MAX);
-  entity.likes = generateNumber(data.LIKES_MAX);
-  entity.description = generateText(data.STRING_LENGTH);
-  entity.date = Math.floor(Math.random() * (Date.now() - 7 * 24 * 3600 * 1000) + 7 * 24 * 3600 * 1000);
-  entity.effect = data.CORRECT_EFFECTS[generateNumber(data.CORRECT_EFFECTS.length - 1)];
-  entity.comments = generateArrayOfStrings(generateNumber(10), data.STRING_LENGTH); // В задании не сказано об ограничении количества комментов, поэтому пускай будет 10 для скорости и наглядности
-  entity.hashtags = generateHashtags();
-  return entity;
+  return {
+    url: generateUrl(data.IMAGE_SIZE),
+    scale: generateNumber(data.SCALE_MAX),
+    likes: generateNumber(data.LIKES_MAX),
+    description: generateText(data.STRING_LENGTH),
+    date: Math.floor(Math.random() * (Date.now() - 7 * 24 * 3600 * 1000) + 7 * 24 * 3600 * 1000),
+    effect: data.CORRECT_EFFECTS[generateNumber(data.CORRECT_EFFECTS.length - 1)],
+    comments: generateArrayOfStrings(generateNumber(10), data.STRING_LENGTH), // В задании не сказано об ограничении количества комментов, поэтому пускай будет 10 для скорости и наглядности
+    hashtags: generateHashtags()
+  };
 }
 
 // генерация адресной строки

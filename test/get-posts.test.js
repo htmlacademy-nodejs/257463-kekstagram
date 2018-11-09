@@ -2,8 +2,13 @@
 
 const assert = require(`assert`);
 const request = require(`supertest`);
-const app = require(`../src/server`).app;
-const data = require(`../data/test.json`);
+const express = require(`express`);
+const postsStoreMock = require(`./mock/posts-store-mock`);
+const imagesStoreMock = require(`./mock/images-store-mock`);
+const postsRoute = require(`../src/posts/route`)(postsStoreMock, imagesStoreMock);
+
+const app = express();
+app.use(`/api/posts`, postsRoute);
 
 const POSTS_LIMIT_DEFAULT = 50;
 
@@ -15,7 +20,7 @@ describe(`GET api/posts`, () => {
       expect(200).
       expect(`Content-Type`, /json/);
     const posts = response.body;
-    assert(posts.length >= 1 && posts.length < POSTS_LIMIT_DEFAULT);
+    assert(posts.total < POSTS_LIMIT_DEFAULT && posts.total >= 1);
   });
   it(`get all post?skip=2&limit=20`, async () => {
     const response = await request(app).
@@ -24,8 +29,7 @@ describe(`GET api/posts`, () => {
       expect(200).
       expect(`Content-Type`, /json/);
     const posts = response.body;
-    assert(posts[0].date, data.data.slice(0, 2));
-    assert(posts.length, 20);
+    assert(posts.total <= 20);
   });
   it(`get bad request ?ski=2&lim=20`, async () => {
     const response = await request(app).
@@ -51,18 +55,18 @@ describe(`GET api/posts`, () => {
       expect(200).
       expect(`Content-Type`, /json/);
     const posts = response.body;
-    assert(posts.length >= 1 && posts.length < POSTS_LIMIT_DEFAULT);
+    assert(posts.total < POSTS_LIMIT_DEFAULT && posts.total >= 1);
   });
 });
 describe(`GET api/posts/:date`, () => {
   it(`get post with parameter date`, async () => {
     const response = await request(app).
-      get(`/api/posts/${data.data[0].date}`).
+      get(`/api/posts/${postsStoreMock.data[0].date}`).
       set(`Accept`, `application/json`).
       expect(200).
       expect(`Content-Type`, /json/);
     const post = response.body;
     assert(typeof post, `object`);
-    assert(post.date, data.data[0].date);
+    assert(post.date === postsStoreMock.data[0].date);
   });
 });

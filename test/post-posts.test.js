@@ -1,11 +1,18 @@
 'use strict';
 
-const assert = require(`assert`);
 const request = require(`supertest`);
-const app = require(`../src/server`).app;
+const assert = require(`assert`);
+const express = require(`express`);
+const imagesStoreMock = require(`./mock/images-store-mock`);
+const postsStoreMock = require(`./mock/posts-store-mock`);
+const postsRoute = require(`../src/posts/route`)(postsStoreMock, imagesStoreMock);
+
+const app = express();
+
+app.use(`/api/posts`, postsRoute);
 
 describe(`POST api/posts`, () => {
-  it(`it send post as json`, async () => {
+  it(`it send good post as json`, async () => {
     const sent = {
       filename: `keks.jpg`,
       scale: 50,
