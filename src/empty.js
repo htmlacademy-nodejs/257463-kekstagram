@@ -62,10 +62,10 @@ const finalStateMachine = {
         process.exit(1);
       }
     },
-    'path': function (answer) {
+    'path': async (answer) => {
       if (answer.length < data.MAX_PATH_LENGTH) {
         // mkDirByPathSync(path.join(path.dirname(require.main.filename), `data`)); // создание папки data, если ее нет
-        fs.open(path.join(data.DATA_DIR, answer + `.json`), `wx`, function (err, fd) {
+        fs.open(path.join(data.DATA_DIR, answer + `.json`), `wx`, async (err, fd) => {
           if (err) {
             if (err.code === `EEXIST`) {
               console.error(`Файл существует, перезаписать? (${colors.blue(`Y`)} / ${colors.blue(`N`)})`);

@@ -2,7 +2,9 @@
 
 const colors = require(`colors/safe`);
 const express = require(`express`);
-const postsRouter = require(`./posts/route`);
+const postsStore = require(`./posts/store`);
+const imagesStore = require(`./images/store`);
+const postsRouter = require(`./posts/route`)(postsStore, imagesStore);
 
 const app = express();
 
@@ -30,7 +32,7 @@ app.use((req, res) => {
   res.status(404).send(`Page not Found`);
 });
 
-module.exports.app = app; // для теста
+// module.exports.app = app; // для теста
 
 module.exports.Command = {
   name: `--server`,
@@ -66,6 +68,6 @@ const startServer = (port) => {
   });
 };
 
-// if (require.main === module) {
-// startServer({host: data.DEFAULT_HOST, port: data.DEFAULT_PORT});
-// }
+if (require.main === module) {
+  startServer({host: data.HOST, port: data.PORT});
+}

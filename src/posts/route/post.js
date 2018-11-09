@@ -1,40 +1,50 @@
 'use strict';
 
 const asyncUtil = require(`./async-middleware`);
-const parametres = require(`./parametres-config/parametres-config`);
-const paramsValidation = require(`./parametres-validation`);
 const NotFoundError = require(`../../error/not-found-error`);
-const data = require(`../../../data/test.json`).data;
-const express = require(`express`);
-const jsonParser = express.json();
-const multer = require(`multer`);
-const upload = multer({storage: multer.memoryStorage()});
+const BadRequestError = require(`../../error/bad-request-error`);
+const logger = require(`../../logger`);
 
 module.exports = (postsRouter) => {
-
-  postsRouter.get(``, asyncUtil(async (req, res) => {
-    let limit = parseInt(req.query.limit || parametres.LIMIT.DEFAULT_VALUE, 10);
-    let skip = parseInt(req.query.skip || parametres.SKIP.DEFAULT_VALUE, 10);
-    paramsValidation(req.query);
-    const result = data.slice(skip, limit + skip);
-    res.status(200).send(result);
-  }));
-
   postsRouter.get(`/:date`, asyncUtil(async (req, res) => {
-    const date = parseInt(req.params.date, 10);
-    if (!date) {
-      throw new Error(`date не указан`);
+    const postDate = req.params.date;
+    if (!postDate) {
+      throw new BadRequestError(`В запросе не указано date`);
     }
-    const found = data.find((it) => it.date === date);
+    const found = await postsRouter.postsStore.getPost(postDate);
     if (!found) {
-      throw new NotFoundError(`date ${date} не найдена`);
+      throw new NotFoundError(`date с именем "${postDate}" не найден`);
     }
-    res.status(200).send(found);
+    res.send(found);
   }));
 
-  postsRouter.post(``, jsonParser, upload.none(), (req, res) => {
-    const body = req.body;
-    res.send(body);
-  });
+  postsRouter.get(`/:date/image`, asyncUtil(async (req, res) => {
+    const postName = req.params.name;
+    if (!postName) {
+      throw new BadRequestError(`В запросе не указано имя`);
+    }
 
+    const found = await postsRouter.postsStore.getPost(postName);
+    if (!found) {
+      throw new NotFoundError(`Пост с date "${postName}" не найден`);
+    }
+
+    const result = await postsRouter.imageStore.get(found._id);
+    if (!result) {
+      throw new NotFoundError(`Аватар для пользователя "${postName}" не найден`);
+    }
+
+    res.header(`Content-Type`, `image/jpg`);
+    res.header(`Content-Length`, result.info.length);
+
+    res.on(`error`, (e) => logger.error(e));
+    res.on(`end`, () => res.end());
+
+    const stream = result.stream;
+
+    stream.on(`error`, (e) => logger.error(e));
+    stream.on(`end`, () => res.end());
+
+    stream.pipe(res);
+  }));
 };
